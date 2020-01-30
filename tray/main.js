@@ -3,6 +3,8 @@ const {app, BrowserWindow, dialog, Tray, shell} = require('electron');
 const username = require('username');
 const trayWindow = require("electron-tray-window");
 
+//username.sync()
+
 var fs = require('fs')
 
 var wincmd = require('node-windows');
@@ -37,7 +39,7 @@ function createWindow () {
   trayWindow.setOptions({tray: tray,window: mainWindow});
 
   mainWindow.webContents.on('did-finish-load', () => {
-
+    mainWindow.webContents.send('message', {"type":"status","data":(knownStatus == "enabled" ? true : false)});
   });
 
   wincmd.isAdminUser(function(isAdmin){
@@ -61,11 +63,13 @@ function createWindow () {
   function doEnableNetwork() {
     knownStatus = "enabled";
     tray.setImage("on.png");
+    mainWindow.webContents.send('message', {"type":"status","data":true});
   }
 
   function doDisableNetwork() {
     knownStatus = "disabled";
     tray.setImage("off.png");
+    mainWindow.webContents.send('message', {"type":"status","data":false});
   }
 
   fs.watchFile('C:\\Windows\\ProgramFiles\\insw\\status.txt', function (curr, prev) {
