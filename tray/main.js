@@ -1,26 +1,20 @@
-// Modules to control application life and create native browser window
-const {app, BrowserWindow, dialog, Tray, shell} = require('electron')
-const electron = require('electron');
-app.commandLine.appendSwitch('--autoplay-policy','no-user-gesture-required')
+const {app, BrowserWindow, dialog, Tray, shell} = require('electron');
 
 const username = require('username');
-
-var AutoLaunch = require('auto-launch');
 const trayWindow = require("electron-tray-window");
+
+var fs = require('fs')
+
+var wincmd = require('node-windows');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 
-var Service = require('node-windows').Service;
-
-// !!!!
-//hide window on creation, programatically wait for firebase command and then show
-// !!!!
+var knownStatus = false;
 
 function createWindow () {
-	
-  // Create the browser window.
+
   mainWindow = new BrowserWindow({
     width: 250,
     height: 300,
@@ -37,36 +31,59 @@ function createWindow () {
   mainWindow.setMenuBarVisibility(false)
   mainWindow.setResizable(false)
 
-  // and load the index.html of the app.
   mainWindow.loadFile('index.html')
   
   var tray = new Tray('off.png');
   trayWindow.setOptions({tray: tray,window: mainWindow});
-  
-  var thisAutoLauncher = new AutoLaunch({
-      name: 'internet-switch',
-  });
-  thisAutoLauncher.enable();
-  
+
   mainWindow.webContents.on('did-finish-load', () => {
-	  
-
 
   });
-  
-  var svc = new Service({
-  name:'internet-switch2',
-  description: 'internet switch',
-  script: 'C:\\scripts\\service\\service.js'
-});
- 
-// Listen for the "install" event, which indicates the
-// process is available as a service.
-svc.on('install',function(){
-  svc.start();
-});
- 
-svc.install();
+
+  wincmd.isAdminUser(function(isAdmin){
+    if (isAdmin) {
+      enableNetwork();
+    } else {
+      disableNetwork();
+    }
+  });
+
+  function enableNetwork() {
+    doEnableNetwork()
+    fs.writeFile('C:\\Windows\\ProgramFiles\\insw\\status.txt', 'enabled', 'utf8');
+  }
+
+  function disableNetwork() {
+    doDisableNetwork()
+    fs.writeFile('C:\\Windows\\ProgramFiles\\insw\\status.txt', 'disabled', 'utf8');
+  }
+
+  function doEnableNetwork() {
+    knownStatus = "enabled";
+    tray.setImage("on.png");
+  }
+
+  function doDisableNetwork() {
+    knownStatus = "disabled";
+    tray.setImage("off.png");
+  }
+
+  fs.watchFile('C:\\Windows\\ProgramFiles\\insw\\status.txt', function (curr, prev) {
+    checkState();
+  });
+
+  checkState();
+
+  function checkState() {
+    fs.readFile('C:\\Windows\\ProgramFiles\\insw\\status.txt', 'utf8', function(err, data) {
+      if (data == "enabled" && knownStatus !== "enabled") {
+        doEnableNetwork();
+      }
+      if (data == "disabled" && knownStatus !== "disabled") {
+        doDisableNetwork();
+      }
+    })
+  }
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
