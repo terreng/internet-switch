@@ -1,4 +1,6 @@
-var AutoLaunch = require('auto-launch');
+var AutoLaunch = require('auto-launch-allusers');
+
+return console.log("done");
 
 const {app} = require('electron');
 var path = require('path');
