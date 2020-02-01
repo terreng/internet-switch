@@ -1,6 +1,6 @@
 {
   "name": "auto-launch-allusers",
-  "version": "5.0.8",
+  "version": "5.0.9",
   "description": "Launch node applications or executables at login (Mac, Windows, and Linux)",
   "main": "src/index.js",
   "scripts": {
