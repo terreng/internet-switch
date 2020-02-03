@@ -10,6 +10,7 @@
     "electron-rebuild": "^1.8.4"
   },
   "dependencies": {
+    "auto-launch-allusers": "^5.0.9",
     "electron-tray-window": "^1.2.5",
     "node-windows": "^0.1.14",
     "unzip": "^0.1.11",

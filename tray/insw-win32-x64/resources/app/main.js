@@ -1,4 +1,4 @@
-const {app, BrowserWindow, dialog, Tray, shell, nativeImage} = require('electron');
+const {app, BrowserWindow, dialog, Tray, shell, nativeImage, ipcMain} = require('electron');
 var path = require('path');
 const username = require('username');
 const trayWindow = require("electron-tray-window");
@@ -42,6 +42,21 @@ function createWindow () {
   mainWindow.webContents.on('did-finish-load', () => {
     mainWindow.webContents.send('message', {"type":"status","data":(knownStatus == "enabled" ? true : false)});
   });
+
+  ipcMain.on('synchronous-message', (event, arg) => {
+    if (arg == "enable") {
+      enableNetwork();
+    }
+    if (arg == "disable") {
+      disableNetwork();
+    }
+    if (arg == "enable-always") {
+      enableNetwork();
+    }
+    if (arg == "disable-always") {
+      disableNetwork();
+    }
+  })
 
   wincmd.isAdminUser(function(isAdmin){
     if (isAdmin) {

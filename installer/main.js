@@ -1,7 +1,5 @@
 var AutoLaunch = require('auto-launch-allusers');
 
-return console.log("done");
-
 const {app} = require('electron');
 var path = require('path');
 var unzip = require("unzip");
@@ -25,7 +23,7 @@ function createWindow () {
   thisAutoLauncher.enable().then(function() {
 
     var svc = new Service({
-      name:'insw1',
+      name:'insw2',
       description: 'Internet Switch - Automatically disable network for non-admin users - Created by Terren Gurule (ter.ren)',
       script: 'C:\\Program Files\\insw\\service.js'
     });

@@ -1,4 +1,4 @@
-const {app, BrowserWindow, dialog, Tray, shell, nativeImage} = require('electron');
+const {app, BrowserWindow, dialog, Tray, shell, nativeImage, ipcMain} = require('electron');
 var path = require('path');
 const username = require('username');
 const trayWindow = require("electron-tray-window");
