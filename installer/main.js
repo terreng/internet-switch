@@ -1,4 +1,4 @@
-var AutoLaunch = require('auto-launch-allusers');
+//var AutoLaunch = require('auto-launch-allusers');
 
 const {app} = require('electron');
 var path = require('path');
@@ -22,7 +22,7 @@ function createWindow () {
   //});
   //thisAutoLauncher.enable().then(function() {
 	  
-	require('child_process').exec('schtasks /create /sc onlogon /tn insw /rl highest /tr "C:\Program Files\insw\insw.exe"')
+	require('child_process').exec('schtasks /create /sc onlogon /tn insw /rl highest /tr "C:\\Program Files\\insw\\insw.exe"')
 
     var svc = new Service({
       name:'insw4',

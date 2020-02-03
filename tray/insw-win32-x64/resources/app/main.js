@@ -40,7 +40,7 @@ function createWindow () {
   trayWindow.setOptions({tray: tray,window: mainWindow});
 
   mainWindow.webContents.on('did-finish-load', () => {
-    mainWindow.webContents.send('message', {"type":"status","data":(knownStatus == "enabled" ? true : false)});
+    mainWindow.webContents.send('message', {"type":"status","data":(knownStatus ? knownStatus : "disabled")});
   });
 
   ipcMain.on('asynchronous-message', (event, arg) => {
