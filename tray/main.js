@@ -53,9 +53,21 @@ function createWindow () {
     }
     if (arg == "enable-always") {
       enableNetwork();
+      fs.readFile('C:\\Program Files\\insw\\whitelist.txt', 'utf8', function(err, data) {
+        data = JSON.parse(data || "[]");
+        data.push(username.sync());
+        fs.writeFileSync('C:\\Program Files\\insw\\whitelist.txt', JSON.stringify(data), 'utf8');
+      })
     }
     if (arg == "disable-always") {
       disableNetwork();
+      fs.readFile('C:\\Program Files\\insw\\whitelist.txt', 'utf8', function(err, data) {
+        data = JSON.parse(data || "[]");
+        if (data.indexOf(username.sync()) > -1) {
+          data.splice(data.indexOf(username.sync()),1)
+        }
+        fs.writeFileSync('C:\\Program Files\\insw\\whitelist.txt', JSON.stringify(data), 'utf8');
+      })
     }
   })
 
@@ -63,7 +75,14 @@ function createWindow () {
     if (isAdmin) {
       enableNetwork();
     } else {
-      disableNetwork();
+      fs.readFile('C:\\Program Files\\insw\\whitelist.txt', 'utf8', function(err, data) {
+        data = JSON.parse(data || "[]")
+        if (data.indexOf(username.sync()) > -1) {
+          enableNetwork();
+        } else {
+          disableNetwork();
+        }
+      });
     }
   });
 
