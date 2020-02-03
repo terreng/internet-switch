@@ -10,37 +10,79 @@
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 body {
-    background: #90a4ae;
+    background: #a8b5bb;
 font-family: 'Open Sans', sans-serif;
 }
 </style>
 </head>
 <body>
 <div>
-<div id="enabled">
+<div id="enabled" style="
+    padding-top: 10px;
+    display: none;
+">
 <center style="
     padding-top: 3px;
 "><img src="on.png" style="
     height: 50px;
     "></center>
 <center style="
-    padding-top: 9px;
-    font-size: 16px;
+    padding-top: 13px;
+    font-size: 17px;
     color: white;
 ">Internet Enabled</center>
 </div>
-<div id="disabled">
+<div id="disabled" style="
+    padding-top: 10px;
+    display: none;
+">
 <center style="
     padding-top: 3px;
 "><img src="off.png" style="
     height: 50px;
     "></center>
 <center style="
-    padding-top: 9px;
-    font-size: 16px;
+    padding-top: 13px;
+    font-size: 17px;
     color: white;
 ">Internet Disabled</center>
 </div>
+<div style="
+    padding: 13px;
+    text-align: center;
+    color: white;
+    font-size: 20px;
+    background: #ff2e2e;
+    font-weight: 600;
+    border-radius: 14px;
+    margin-top: 89px;
+">Disable Now</div>
+<div style="
+padding: 11px;
+text-align: center;
+color: #ff0000;
+font-size: 18px;
+/* background: #ff2e2e; */
+font-weight: 600;
+/* margin-top: 90px; */
+">Always Disable</div>
+<div style="
+padding: 13px;
+text-align: center;
+color: white;
+font-size: 20px;
+background: #0bde00;
+font-weight: 600;
+border-radius: 14px;
+margin-top: 89px;
+">Enable Now</div>
+<div style="
+padding: 11px;
+text-align: center;
+color: #5ffb2e;
+font-size: 18px;
+font-weight: 600;
+">Always Enable</div>
 <script>
 const ipc = require('electron').ipcRenderer;
 ipc.on('message', (event, message) => {
