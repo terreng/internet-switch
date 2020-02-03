@@ -17,9 +17,9 @@ font-family: 'Open Sans', sans-serif;
 </head>
 <body>
 <div>
-<div id="enabled" style="
+<div id="enabled">
+<div style="
     padding-top: 10px;
-    display: none;
 ">
 <center style="
     padding-top: 3px;
@@ -32,9 +32,31 @@ font-family: 'Open Sans', sans-serif;
     color: white;
 ">Internet Enabled</center>
 </div>
-<div id="disabled" style="
+<div onclick="doDisable()" style="
+    padding: 13px;
+    text-align: center;
+    color: white;
+    font-size: 20px;
+    background: #ff2e2e;
+    font-weight: 600;
+    border-radius: 14px;
+    margin-top: 88px;
+    cursor: pointer;
+">Disable Now</div>
+<div onclick="doAlwaysDisable()" style="
+padding: 11px;
+text-align: center;
+color: #ff0000;
+font-size: 18px;
+/* background: #ff2e2e; */
+font-weight: 600;
+/* margin-top: 90px; */
+cursor: pointer;
+">Always Disable</div>
+</div>
+<div id="disabled">
+<div style="
     padding-top: 10px;
-    display: none;
 ">
 <center style="
     padding-top: 3px;
@@ -47,26 +69,7 @@ font-family: 'Open Sans', sans-serif;
     color: white;
 ">Internet Disabled</center>
 </div>
-<div style="
-    padding: 13px;
-    text-align: center;
-    color: white;
-    font-size: 20px;
-    background: #ff2e2e;
-    font-weight: 600;
-    border-radius: 14px;
-    margin-top: 89px;
-">Disable Now</div>
-<div style="
-padding: 11px;
-text-align: center;
-color: #ff0000;
-font-size: 18px;
-/* background: #ff2e2e; */
-font-weight: 600;
-/* margin-top: 90px; */
-">Always Disable</div>
-<div style="
+<div onclick="doEnable()" style="
 padding: 13px;
 text-align: center;
 color: white;
@@ -74,15 +77,18 @@ font-size: 20px;
 background: #0bde00;
 font-weight: 600;
 border-radius: 14px;
-margin-top: 89px;
+margin-top: 88px;
+cursor: pointer;
 ">Enable Now</div>
-<div style="
+<div onclick="doAlwaysEnable()" style="
 padding: 11px;
 text-align: center;
 color: #5ffb2e;
 font-size: 18px;
 font-weight: 600;
+cursor: pointer;
 ">Always Enable</div>
+</div>
 <script>
 const ipc = require('electron').ipcRenderer;
 ipc.on('message', (event, message) => {
@@ -102,6 +108,18 @@ function setEnabled() {
 function setDisabled() {
     document.querySelector("#disabled").style.display = "block";
     document.querySelector("#enabled").style.display = "none";
+}
+function doEnable() {
+    ipc.send('asynchronous-message', 'enable')
+}
+function doDisable() {
+    ipc.send('asynchronous-message', 'disable')
+}
+function doAlwaysEnable() {
+    ipc.send('asynchronous-message', 'enable-always')
+}
+function doAlwaysDisable() {
+    ipc.send('asynchronous-message', 'disable-always')
 }
 </script>
 </body>

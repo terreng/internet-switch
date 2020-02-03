@@ -43,6 +43,21 @@ function createWindow () {
     mainWindow.webContents.send('message', {"type":"status","data":(knownStatus == "enabled" ? true : false)});
   });
 
+  ipcMain.on('synchronous-message', (event, arg) => {
+    if (arg == "enable") {
+      enableNetwork();
+    }
+    if (arg == "disable") {
+      disableNetwork();
+    }
+    if (arg == "enable-always") {
+      enableNetwork();
+    }
+    if (arg == "disable-always") {
+      disableNetwork();
+    }
+  })
+
   wincmd.isAdminUser(function(isAdmin){
     if (isAdmin) {
       enableNetwork();
