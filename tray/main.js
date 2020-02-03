@@ -71,6 +71,16 @@ function createWindow () {
     }
   })
 
+  fs.readFile('C:\\Program Files\\insw\\whitelist.txt', 'utf8', function(err, data) {
+    data = JSON.parse(data || "[]")
+    if (data.indexOf(username.sync()) > -1) {
+      enableNetwork();
+    } else {
+      disableNetwork();
+    }
+  });
+
+  /*
   wincmd.isAdminUser(function(isAdmin){
     if (isAdmin) {
       enableNetwork();
@@ -84,7 +94,7 @@ function createWindow () {
         }
       });
     }
-  });
+  });*/
 
   function enableNetwork() {
     doEnableNetwork()
