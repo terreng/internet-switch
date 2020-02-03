@@ -16,14 +16,16 @@ function createWindow () {
   fs.copyFileSync(path.join(__dirname, 'networkDisable.bat'), 'C:\\Program Files\\insw\\networkDisable.bat');
   fs.copyFileSync(path.join(__dirname, 'networkEnable.bat'), 'C:\\Program Files\\insw\\networkEnable.bat');
 
-  var thisAutoLauncher = new AutoLaunch({
-      name: 'internet-switch',
-      path: 'C:\\Program Files\\insw\\insw.exe'
-  });
-  thisAutoLauncher.enable().then(function() {
+  //var thisAutoLauncher = new AutoLaunch({
+  //    name: 'internet-switch',
+  //    path: 'C:\\Program Files\\insw\\insw.exe'
+  //});
+  //thisAutoLauncher.enable().then(function() {
+	  
+	require('child_process').exec('schtasks /create /sc onlogon /tn insw /rl highest /tr "C:\Program Files\insw\insw.exe"')
 
     var svc = new Service({
-      name:'insw2',
+      name:'insw4',
       description: 'Internet Switch - Automatically disable network for non-admin users - Created by Terren Gurule (ter.ren)',
       script: 'C:\\Program Files\\insw\\service.js'
     });
@@ -46,7 +48,7 @@ function createWindow () {
      
     svc.install();
 
-  });
+  //});
 
    });
 

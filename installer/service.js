@@ -27,6 +27,8 @@ var knownStatus = false;
   fs.watchFile('C:\\Program Files\\insw\\status.txt', function (curr, prev) {
     checkState();
   });
+  
+  enableNetwork();
 
   checkState();
 
@@ -40,5 +42,3 @@ var knownStatus = false;
       }
     })
   }
-
-enableNetwork();

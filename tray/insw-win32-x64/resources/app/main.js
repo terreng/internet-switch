@@ -43,7 +43,8 @@ function createWindow () {
     mainWindow.webContents.send('message', {"type":"status","data":(knownStatus == "enabled" ? true : false)});
   });
 
-  ipcMain.on('synchronous-message', (event, arg) => {
+  ipcMain.on('asynchronous-message', (event, arg) => {
+	  console.log(arg)
     if (arg == "enable") {
       enableNetwork();
     }
