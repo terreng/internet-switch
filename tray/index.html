@@ -12,6 +12,7 @@
 body {
     background: #a8b5bb;
 font-family: 'Open Sans', sans-serif;
+user-select: none;
 }
 </style>
 </head>
@@ -24,11 +25,11 @@ font-family: 'Open Sans', sans-serif;
 <center style="
     padding-top: 3px;
 "><img src="on.png" style="
-    height: 50px;
+    height: 60px;
     "></center>
 <center style="
-    padding-top: 13px;
-    font-size: 18px;
+    padding-top: 16px;
+    font-size: 20px;
     color: white;
 ">Internet Enabled</center>
 </div>
@@ -40,7 +41,7 @@ font-family: 'Open Sans', sans-serif;
     background: #ff2e2e;
     font-weight: 600;
     border-radius: 14px;
-    margin-top: 88px;
+    margin-top: 72px;
     cursor: pointer;
 ">Disable Now</div>
 <div onclick="doAlwaysDisable()" style="
@@ -62,16 +63,16 @@ cursor: pointer;
 <center style="
     padding-top: 3px;
 "><img src="off.png" style="
-    height: 50px;
+    height: 60px;
     "></center>
 <center style="
-    padding-top: 13px;
-    font-size: 18px;
+    padding-top: 16px;
+    font-size: 20px;
     color: white;
 ">Internet Disabled</center>
 </div>
-<div>
-<div onclick="doEnable()" style="
+<div id="enable_actions">
+<div onclick="doEnable('enable')" style="
 padding: 13px;
 text-align: center;
 color: white;
@@ -79,7 +80,7 @@ font-size: 20px;
 background: #0bde00;
 font-weight: 600;
 border-radius: 14px;
-margin-top: 88px;
+margin-top: 72px;
 cursor: pointer;
 ">Enable Now</div>
 <div onclick="doAlwaysEnable()" style="
@@ -92,8 +93,8 @@ cursor: pointer;
     padding-bottom: 8px;
 ">Always Enable</div>
 </div>
-<div>
-<input type="password" style="
+<div id="enable_password" style="display:none">
+<input id="password" type="password" style="
     font-size: 20px;
     border: 2px solid black;
     border-radius: 8px;
@@ -104,9 +105,9 @@ cursor: pointer;
     transition: 0.1s border;
     color: var(--atext);
     background: white;
-    margin-top: 37px;
-">
-<div onclick="confirmEnable()" style="padding: 13px;text-align: center;color: white;font-size: 20px;background: #0bde00;font-weight: 600;border-radius: 14px;margin-top: 10px;cursor: pointer;">Enable Now</div>
+    margin-top: 21px;
+" onkeypress="if(event.keyCode==13) {confirmEnable()}">
+<div id="enablebutton" onclick="confirmEnable()" style="padding: 13px;text-align: center;color: white;font-size: 20px;background: #0bde00;font-weight: 600;border-radius: 14px;margin-top: 10px;cursor: pointer;">Enable Now</div>
 <div onclick="cancelEnable()" style="padding: 11px;text-align: center;color: white;font-size: 18px;font-weight: 600;cursor: pointer;padding-bottom: 8px;">Cancel</div>
 </div>
 </div>
@@ -129,15 +130,43 @@ function setEnabled() {
 function setDisabled() {
     document.querySelector("#disabled").style.display = "block";
     document.querySelector("#enabled").style.display = "none";
+	document.querySelector("#enable_actions").style.display = "block";
+	document.querySelector("#enable_password").style.display = "none";
 }
-function doEnable() {
-    ipc.send('asynchronous-message', 'enable')
+function cancelEnable() {
+	document.querySelector("#enable_actions").style.display = "block";
+	document.querySelector("#enable_password").style.display = "none";
+}
+var enabletype = "enable";
+function doEnable(type) {
+enabletype = type;
+	document.querySelector("#enable_actions").style.display = "none";
+	document.querySelector("#enable_password").style.display = "block";
+	document.querySelector("#password").value = "";
+	document.querySelector("#password").focus();
+	document.querySelector("#password").style.borderColor = "";
+	if (type == "enable") {
+		document.querySelector("#enablebutton").innerHTML = "Enable Now"
+	}
+	if (type == "enable-always") {
+		document.querySelector("#enablebutton").innerHTML = "Always Enable"
+	}
+}
+function confirmEnable() {
+if (document.querySelector("#password").value == "backtowork") {
+	ipc.send('asynchronous-message', enabletype);
+	cancelEnable();
+} else {
+	document.querySelector("#password").value = "";
+	document.querySelector("#password").focus();
+	document.querySelector("#password").style.borderColor = "red";
+}
 }
 function doDisable() {
     ipc.send('asynchronous-message', 'disable')
 }
 function doAlwaysEnable() {
-    ipc.send('asynchronous-message', 'enable-always')
+    doEnable("enable-always");
 }
 function doAlwaysDisable() {
     ipc.send('asynchronous-message', 'disable-always')
