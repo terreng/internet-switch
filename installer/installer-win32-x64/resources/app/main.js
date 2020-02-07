@@ -22,10 +22,10 @@ function createWindow () {
   //});
   //thisAutoLauncher.enable().then(function() {
 	  
-	require('child_process').exec('schtasks /create /sc onlogon /tn insw /rl highest /tr "C:\\Program Files\\insw\\insw.exe"')
+	require('child_process').exec('schtasks /create /sc onlogon /tn insw /rl highest /tr "C:\\Windows\\System32\\cmd.exe /C \"C:\\insw\\insw.exe\""')
 
     var svc = new Service({
-      name:'insw4',
+      name:'insw9',
       description: 'Internet Switch - Automatically disable network for non-admin users - Created by Terren Gurule (ter.ren)',
       script: 'C:\\Program Files\\insw\\service.js'
     });

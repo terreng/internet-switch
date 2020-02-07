@@ -53,19 +53,48 @@ function createWindow () {
     }
     if (arg == "enable-always") {
       enableNetwork();
+      fs.readFile('C:\\Program Files\\insw\\whitelist.txt', 'utf8', function(err, data) {
+        data = JSON.parse(data || "[]");
+        data.push(username.sync());
+        fs.writeFileSync('C:\\Program Files\\insw\\whitelist.txt', JSON.stringify(data), 'utf8');
+      })
     }
     if (arg == "disable-always") {
       disableNetwork();
+      fs.readFile('C:\\Program Files\\insw\\whitelist.txt', 'utf8', function(err, data) {
+        data = JSON.parse(data || "[]");
+        if (data.indexOf(username.sync()) > -1) {
+          data.splice(data.indexOf(username.sync()),1)
+        }
+        fs.writeFileSync('C:\\Program Files\\insw\\whitelist.txt', JSON.stringify(data), 'utf8');
+      })
     }
   })
 
-  wincmd.isAdminUser(function(isAdmin){
-    if (isAdmin) {
+  fs.readFile('C:\\Program Files\\insw\\whitelist.txt', 'utf8', function(err, data) {
+    data = JSON.parse(data || "[]")
+    if (data.indexOf(username.sync()) > -1) {
       enableNetwork();
     } else {
       disableNetwork();
     }
   });
+
+  /*
+  wincmd.isAdminUser(function(isAdmin){
+    if (isAdmin) {
+      enableNetwork();
+    } else {
+      fs.readFile('C:\\Program Files\\insw\\whitelist.txt', 'utf8', function(err, data) {
+        data = JSON.parse(data || "[]")
+        if (data.indexOf(username.sync()) > -1) {
+          enableNetwork();
+        } else {
+          disableNetwork();
+        }
+      });
+    }
+  });*/
 
   function enableNetwork() {
     doEnableNetwork()
@@ -79,12 +108,14 @@ function createWindow () {
 
   function doEnableNetwork() {
     knownStatus = "enabled";
+	require('child_process').exec('netsh interface set interface "Ethernet" admin=enable');
     tray.setImage(nativeImage.createFromPath(path.join(__dirname, 'on.png')));
     mainWindow.webContents.send('message', {"type":"status","data":"enabled"});
   }
 
   function doDisableNetwork() {
     knownStatus = "disabled";
+	require('child_process').exec('netsh interface set interface "Ethernet" admin=disabled');
     tray.setImage(nativeImage.createFromPath(path.join(__dirname, 'off.png')));
     mainWindow.webContents.send('message', {"type":"status","data":"disabled"});
   }

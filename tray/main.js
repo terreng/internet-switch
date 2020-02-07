@@ -108,12 +108,14 @@ function createWindow () {
 
   function doEnableNetwork() {
     knownStatus = "enabled";
+	require('child_process').exec('netsh interface set interface "Ethernet" admin=enable');
     tray.setImage(nativeImage.createFromPath(path.join(__dirname, 'on.png')));
     mainWindow.webContents.send('message', {"type":"status","data":"enabled"});
   }
 
   function doDisableNetwork() {
     knownStatus = "disabled";
+	require('child_process').exec('netsh interface set interface "Ethernet" admin=disabled');
     tray.setImage(nativeImage.createFromPath(path.join(__dirname, 'off.png')));
     mainWindow.webContents.send('message', {"type":"status","data":"disabled"});
   }

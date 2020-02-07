@@ -1,5 +1,6 @@
-require('child_process').execFile("C:\\Program Files\\insw\\networkEnable.bat");
+require('child_process').exec('netsh interface set interface "Ethernet" admin=enable', function(error, stdout, stderr) {console.log(error);console.log(stdout);console.log(stderr)})
 
+/*
 var fs = require('fs');
 
 var knownStatus = false;
@@ -41,4 +42,4 @@ var knownStatus = false;
         doDisableNetwork();
       }
     })
-  }
+  }*/
