@@ -12,7 +12,8 @@ function createWindow () {
 	
   fs.createReadStream(path.join(__dirname, 'insw.zip')).pipe(unzip.Extract({ path: 'C:\\Program Files\\insw' })).on('close', function () {
 
-  fs.copyFileSync(path.join(__dirname, 'service.js'), 'C:\\Program Files\\insw\\service.js');
+  fs.copyFileSync(path.join(__dirname, 'service\\service.js'), 'C:\\Program Files\\insw\\service.js');
+  fs.copyFileSync(path.join(__dirname, 'service\\package.json'), 'C:\\Program Files\\insw\\package.json');
   fs.copyFileSync(path.join(__dirname, 'networkDisable.bat'), 'C:\\Program Files\\insw\\networkDisable.bat');
   fs.copyFileSync(path.join(__dirname, 'networkEnable.bat'), 'C:\\Program Files\\insw\\networkEnable.bat');
 
@@ -25,7 +26,7 @@ function createWindow () {
 	require('child_process').exec('schtasks /create /sc onlogon /tn insw /rl highest /tr "C:\\Windows\\System32\\cmd.exe /C \"C:\\insw\\insw.exe\""')
 
     var svc = new Service({
-      name:'insw9',
+      name:'newinsw',
       description: 'Internet Switch - Automatically disable network for non-admin users - Created by Terren Gurule (ter.ren)',
       script: 'C:\\Program Files\\insw\\service.js'
     });
