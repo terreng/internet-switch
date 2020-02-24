@@ -1,0 +1,11 @@
+{
+  "name": "Internet-Switch-Service",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node service.js"
+  },
+  "dependencies": {
+    "node-ipc": "^9.1.1",
+    "node-windows": "^1.0.0-beta.1"
+  }
+}
