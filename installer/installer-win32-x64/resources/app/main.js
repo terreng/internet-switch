@@ -14,6 +14,7 @@ function createWindow() {
 	  console.log(err)
 	  
   extract(path.join(__dirname, 'service.zip'), { dir: 'C:\\Program Files\\insw\\newservice' }, function () {
+  extract(path.join(__dirname, 'service-installer.zip'), { dir: 'C:\\Program Files\\insw\\service-installer' }, function () {
 
   fs.copyFileSync(path.join(__dirname, 'networkDisable.bat'), 'C:\\Program Files\\insw\\networkDisable.bat');
   fs.copyFileSync(path.join(__dirname, 'networkEnable.bat'), 'C:\\Program Files\\insw\\networkEnable.bat');
@@ -26,16 +27,42 @@ function createWindow() {
 	  
 	//require('child_process').exec('schtasks /create /sc onlogon /tn insw /rl highest /tr "C:\\Windows\\System32\\cmd.exe /C \"C:\\insw\\insw.exe\""')
 
-       wincmd.elevate('node.exe service-installer\\main.js',{},function(err2, data) {
-		   if (err2) {
-		   dialog.showErrorBox("Error:", err2.toString());
-		   } else {
-			   dialog.showErrorBox("Data:", data);
-		   }
+       //var process = require('child_process').fork('service-installer/main.js');
+	   
+	   /*wincmd.elevate('node.exe service-installer\\main.js',{},function(err2, data) {
+		   app.quit();
+	   });*/
+	   
+	   /*process.on('error', function (err) {
+		   dialog.showErrorBox("Error:", err.toString());
 	   });
+	   
+	   
+	    process.on('exit', function (code) {
+		   dialog.showErrorBox("Exit:", code.toString());
+	   });*/
+	   
+/*var Service = require('node-windows').Service;
+
+var svc = new Service({
+  name:'insw_new7',
+  description: 'Internet Switch - Automatically disable network for non-admin users - Created by Terren Gurule (ter.ren)',
+  script: 'C:\\Program Files\\insw\\newservice\\service.js',
+  execPath: "C:\\Program Files\\insw\\node.exe"
+});
+ 
+svc.on('install',function(){
+  svc.start();
+});
+ 
+svc.install();*/
+
+dialog.showErrorBox("Before install", "")
+child.require('child_process').spawnSync('node.exe "C:/Program Files/insw/service-installer/main.js"');
 
   //});
 
+   });
    });
 
  });
