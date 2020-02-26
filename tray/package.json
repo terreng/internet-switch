@@ -11,10 +11,12 @@
   },
   "dependencies": {
     "electron-tray-window": "^1.2.5",
-    "node-windows": "^0.1.14",
+    "node-ipc": "^9.1.1",
     "username": "^5.1.0"
   },
   "build": {
-    "extraResources": ["*"]
+    "extraResources": [
+      "*"
+    ]
   }
 }

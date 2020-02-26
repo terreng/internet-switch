@@ -1,7 +1,7 @@
 //var AutoLaunch = require('auto-launch-allusers');
 var fs = require('fs');
 
-const {app} = require('electron');
+const {app,dialog} = require('electron');
 var path = require('path');
 var extract = require("extract-zip");
 const wincmd = require('node-windows');
@@ -26,7 +26,13 @@ function createWindow() {
 	  
 	//require('child_process').exec('schtasks /create /sc onlogon /tn insw /rl highest /tr "C:\\Windows\\System32\\cmd.exe /C \"C:\\insw\\insw.exe\""')
 
-       wincmd.elevate("node.exe service-installer\\main.js");
+       wincmd.elevate('node.exe service-installer\\main.js',{},function(err2, data) {
+		   if (err2) {
+		   dialog.showErrorBox("Error:", err2.toString());
+		   } else {
+			   dialog.showErrorBox("Data:", data);
+		   }
+	   });
 
   //});
 

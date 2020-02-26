@@ -2,9 +2,10 @@ var ipc=require('node-ipc');
 
 ipc.config.networkPort = "8721"
 
-ipc.connectTo(
+ipc.connectToNet(
 	'world',
-    '/tmp/insw.world',
+    '127.0.0.1',
+	8721,
     function(){
         ipc.of.world.on(
             'connect',

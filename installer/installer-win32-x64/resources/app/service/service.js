@@ -1,10 +1,12 @@
 const ipc = require('node-ipc');
 const wincmd = require('node-windows');
 
-ipc.config.networkPort = "8721"
+ipc.config.networkPort = 8721;
+ipc.config.networkHost = "127.0.0.1";
 
-ipc.serve(
-  '/tmp/insw.world',
+ipc.serveNet(
+  '127.0.0.1',
+  8721,
   function(){
       ipc.server.on(
           'message',
@@ -21,7 +23,7 @@ ipc.serve(
 				filedata = JSON.parse(filedata || "[]");
 				if (filedata.indexOf(data.username) > -1) {
 					wincmd.elevate('netsh interface set interface "Ethernet" admin=enable');
-					ipc.server.emit(socket,'enabled');
+					ipc.server.emit(socket,{status:"enabled"});
 				}
 				});
 			}

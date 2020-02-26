@@ -3,19 +3,46 @@ var path = require('path');
 const username = require('username');
 const trayWindow = require("electron-tray-window");
 
+var ipc=require('node-ipc');
+
 //username.sync()
 
 var fs = require('fs')
-
-var wincmd = require('node-windows');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 
-var knownStatus = false;
+function beforeCreateWindow() {
 
-function createWindow () {
+ipc.connectToNet(
+	'world',
+    '127.0.0.1',
+	8721,
+    function(){
+        ipc.of.world.on(
+            'connect',
+            function(){
+				createWindow();
+            }
+        );
+        ipc.of.world.on(
+            'message',
+            function(data){
+                if (data.status == "enabled") {
+					tray.setImage(nativeImage.createFromPath(path.join(__dirname, 'on.png')));
+					mainWindow.webContents.send('message', {"type":"status","data":"enabled"});
+				}
+            }
+        );
+    }
+);
+	
+}
+
+var tray;
+
+function createWindow() {
 
   mainWindow = new BrowserWindow({
     width: 250,
@@ -36,7 +63,7 @@ function createWindow () {
 
   mainWindow.loadFile('index.html')
   
-  var tray = new Tray(nativeImage.createFromPath(path.join(__dirname, 'off.png')));
+  tray = new Tray(nativeImage.createFromPath(path.join(__dirname, 'off.png')));
   trayWindow.setOptions({tray: tray,window: mainWindow});
 
   mainWindow.webContents.on('did-finish-load', () => {
@@ -46,96 +73,28 @@ function createWindow () {
   ipcMain.on('asynchronous-message', (event, arg) => {
 	  console.log(arg)
     if (arg == "enable") {
-      enableNetwork();
+      ipc.of.world.emit('message',{command:'enable'})
+	  tray.setImage(nativeImage.createFromPath(path.join(__dirname, 'on.png')));
+	  mainWindow.webContents.send('message', {"type":"status","data":"enabled"});
     }
     if (arg == "disable") {
-      disableNetwork();
+      ipc.of.world.emit('message',{command:'disable'})
+	  tray.setImage(nativeImage.createFromPath(path.join(__dirname, 'off.png')));
+	  mainWindow.webContents.send('message', {"type":"status","data":"disabled"});
     }
     if (arg == "enable-always") {
-      enableNetwork();
-      fs.readFile('C:\\Program Files\\insw\\whitelist.txt', 'utf8', function(err, data) {
-        data = JSON.parse(data || "[]");
-        data.push(username.sync());
-        fs.writeFileSync('C:\\Program Files\\insw\\whitelist.txt', JSON.stringify(data), 'utf8');
-      })
+      ipc.of.world.emit('message',{command:'enable-always',username:username.sync()})
+	  tray.setImage(nativeImage.createFromPath(path.join(__dirname, 'on.png')));
+	  mainWindow.webContents.send('message', {"type":"status","data":"enabled"});
     }
     if (arg == "disable-always") {
-      disableNetwork();
-      fs.readFile('C:\\Program Files\\insw\\whitelist.txt', 'utf8', function(err, data) {
-        data = JSON.parse(data || "[]");
-        if (data.indexOf(username.sync()) > -1) {
-          data.splice(data.indexOf(username.sync()),1)
-        }
-        fs.writeFileSync('C:\\Program Files\\insw\\whitelist.txt', JSON.stringify(data), 'utf8');
-      })
+      ipc.of.world.emit('message',{command:'disable-always',username:username.sync()})
+	  tray.setImage(nativeImage.createFromPath(path.join(__dirname, 'off.png')));
+	  mainWindow.webContents.send('message', {"type":"status","data":"disabled"});
     }
   })
-
-  fs.readFile('C:\\Program Files\\insw\\whitelist.txt', 'utf8', function(err, data) {
-    data = JSON.parse(data || "[]")
-    if (data.indexOf(username.sync()) > -1) {
-      enableNetwork();
-    } else {
-      disableNetwork();
-    }
-  });
-
-  /*
-  wincmd.isAdminUser(function(isAdmin){
-    if (isAdmin) {
-      enableNetwork();
-    } else {
-      fs.readFile('C:\\Program Files\\insw\\whitelist.txt', 'utf8', function(err, data) {
-        data = JSON.parse(data || "[]")
-        if (data.indexOf(username.sync()) > -1) {
-          enableNetwork();
-        } else {
-          disableNetwork();
-        }
-      });
-    }
-  });*/
-
-  function enableNetwork() {
-    doEnableNetwork()
-    fs.writeFileSync('C:\\Program Files\\insw\\status.txt', 'enabled', 'utf8');
-  }
-
-  function disableNetwork() {
-    doDisableNetwork()
-    fs.writeFileSync('C:\\Program Files\\insw\\status.txt', 'disabled', 'utf8');
-  }
-
-  function doEnableNetwork() {
-    knownStatus = "enabled";
-	require('child_process').exec('netsh interface set interface "Ethernet" admin=enable');
-    tray.setImage(nativeImage.createFromPath(path.join(__dirname, 'on.png')));
-    mainWindow.webContents.send('message', {"type":"status","data":"enabled"});
-  }
-
-  function doDisableNetwork() {
-    knownStatus = "disabled";
-	require('child_process').exec('netsh interface set interface "Ethernet" admin=disabled');
-    tray.setImage(nativeImage.createFromPath(path.join(__dirname, 'off.png')));
-    mainWindow.webContents.send('message', {"type":"status","data":"disabled"});
-  }
-
-  fs.watchFile('C:\\Program Files\\insw\\status.txt', function (curr, prev) {
-    checkState();
-  });
-
-  checkState();
-
-  function checkState() {
-    fs.readFile('C:\\Program Files\\insw\\status.txt', 'utf8', function(err, data) {
-      if (data == "enabled" && knownStatus !== "enabled") {
-        doEnableNetwork();
-      }
-      if (data == "disabled" && knownStatus !== "disabled") {
-        doDisableNetwork();
-      }
-    })
-  }
+  
+  ipc.of.world.emit('message',{command:'user-login',username:username.sync()})
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
@@ -152,7 +111,7 @@ function createWindow () {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow)
+app.on('ready', beforeCreateWindow)
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {

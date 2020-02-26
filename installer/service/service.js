@@ -23,7 +23,7 @@ ipc.serveNet(
 				filedata = JSON.parse(filedata || "[]");
 				if (filedata.indexOf(data.username) > -1) {
 					wincmd.elevate('netsh interface set interface "Ethernet" admin=enable');
-					ipc.server.emit(socket,'enabled');
+					ipc.server.emit(socket,{status:"enabled"});
 				}
 				});
 			}
