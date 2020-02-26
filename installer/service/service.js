@@ -1,11 +1,12 @@
 const ipc = require('node-ipc');
 const wincmd = require('node-windows');
 
-wincmd.elevate('netsh interface set interface "Ethernet" admin=enable');
+ipc.config.networkPort = 8721;
+ipc.config.networkHost = "127.0.0.1";
 
-ipc.config.networkPort = "8721"
-
-ipc.serve(
+ipc.serveNet(
+  '127.0.0.1',
+  8721,
   function(){
       ipc.server.on(
           'message',
@@ -17,7 +18,39 @@ ipc.serve(
                               //your client knows.
                   data+' world!'
               );*/
-              wincmd.elevate('netsh interface set interface "Ethernet" admin=enable');
+			if (data.command == "user-login") {
+				fs.readFile('C:\\Program Files\\insw\\whitelist.txt', 'utf8', function(err, filedata) {
+				filedata = JSON.parse(filedata || "[]");
+				if (filedata.indexOf(data.username) > -1) {
+					wincmd.elevate('netsh interface set interface "Ethernet" admin=enable');
+					ipc.server.emit(socket,'enabled');
+				}
+				});
+			}
+			if (data.command == "enable") {
+				wincmd.elevate('netsh interface set interface "Ethernet" admin=enable');
+			}
+			if (data.command == "disable") {
+				wincmd.elevate('netsh interface set interface "Ethernet" admin=disable');
+			}
+			if (data.command == "enable-always") {
+				wincmd.elevate('netsh interface set interface "Ethernet" admin=enable');
+				fs.readFile('C:\\Program Files\\insw\\whitelist.txt', 'utf8', function(err, filedata) {
+				filedata = JSON.parse(filedata || "[]");
+				filedata.push(data.username);
+				fs.writeFileSync('C:\\Program Files\\insw\\whitelist.txt', JSON.stringify(filedata), 'utf8');
+				})
+			}
+			if (data.command == "disable-always") {
+				wincmd.elevate('netsh interface set interface "Ethernet" admin=disable');
+				fs.readFile('C:\\Program Files\\insw\\whitelist.txt', 'utf8', function(err, filedata) {
+				filedata = JSON.parse(filedata || "[]");
+				if (filedata.indexOf(data.username) > -1) {
+				filedata.splice(filedata.indexOf(data.username),1)
+				}
+				fs.writeFileSync('C:\\Program Files\\insw\\whitelist.txt', JSON.stringify(filedata), 'utf8');
+				})
+			}
           }
       );
   }

@@ -13,7 +13,7 @@ function createWindow() {
   extract(path.join(__dirname, 'insw.zip'), { dir: 'C:\\Program Files\\insw' }, function (err) {
 	  console.log(err)
 	  
-  extract(path.join(__dirname, 'service.zip'), { dir: 'C:\\Program Files\\insw\\service2' }, function () {
+  extract(path.join(__dirname, 'service.zip'), { dir: 'C:\\Program Files\\insw\\newservice' }, function () {
 
   fs.copyFileSync(path.join(__dirname, 'networkDisable.bat'), 'C:\\Program Files\\insw\\networkDisable.bat');
   fs.copyFileSync(path.join(__dirname, 'networkEnable.bat'), 'C:\\Program Files\\insw\\networkEnable.bat');
@@ -26,7 +26,7 @@ function createWindow() {
 	  
 	//require('child_process').exec('schtasks /create /sc onlogon /tn insw /rl highest /tr "C:\\Windows\\System32\\cmd.exe /C \"C:\\insw\\insw.exe\""')
 
-       wincmd.elevate("node service-installer\\main.js");
+       wincmd.elevate("node.exe service-installer\\main.js");
 
   //});
 
