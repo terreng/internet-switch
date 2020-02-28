@@ -1,5 +1,8 @@
+console.log("Version 2")
+
 const ipc = require('node-ipc');
 const wincmd = require('node-windows');
+var fs = require('fs');
 
 ipc.config.networkPort = 8721;
 ipc.config.networkHost = "127.0.0.1";
@@ -19,11 +22,19 @@ ipc.serveNet(
                   data+' world!'
               );*/
 			if (data.command == "user-login") {
+				console.log("Received user login event")
 				fs.readFile('C:\\Program Files\\insw\\whitelist.txt', 'utf8', function(err, filedata) {
+					console.log("Got file read")
+					console.log(err)
 				filedata = JSON.parse(filedata || "[]");
+				console.log("Did parse")
+				console.log(filedata)
 				if (filedata.indexOf(data.username) > -1) {
 					wincmd.elevate('netsh interface set interface "Ethernet" admin=enable');
-					ipc.server.emit(socket,{status:"enabled"});
+					ipc.server.emit(socket,'message',{status:"enabled"});
+				} else {
+					wincmd.elevate('netsh interface set interface "Ethernet" admin=disabled');
+					ipc.server.emit(socket,'message',{status:"disabled"});
 				}
 				});
 			}

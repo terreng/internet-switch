@@ -27,11 +27,21 @@ ipc.connectToNet(
             }
         );
         ipc.of.world.on(
+            'disconnect',
+            function(){
+				app.quit();
+            }
+        );
+        ipc.of.world.on(
             'message',
             function(data){
                 if (data.status == "enabled") {
 					tray.setImage(nativeImage.createFromPath(path.join(__dirname, 'on.png')));
 					mainWindow.webContents.send('message', {"type":"status","data":"enabled"});
+				}
+                if (data.status == "disabled") {
+					tray.setImage(nativeImage.createFromPath(path.join(__dirname, 'off.png')));
+					mainWindow.webContents.send('message', {"type":"status","data":"disabled"});
 				}
             }
         );
@@ -67,7 +77,7 @@ function createWindow() {
   trayWindow.setOptions({tray: tray,window: mainWindow});
 
   mainWindow.webContents.on('did-finish-load', () => {
-    mainWindow.webContents.send('message', {"type":"status","data":(knownStatus ? knownStatus : "disabled")});
+    ipc.of.world.emit('message',{command:'user-login',username:username.sync()})
   });
 
   ipcMain.on('asynchronous-message', (event, arg) => {
@@ -93,8 +103,6 @@ function createWindow() {
 	  mainWindow.webContents.send('message', {"type":"status","data":"disabled"});
     }
   })
-  
-  ipc.of.world.emit('message',{command:'user-login',username:username.sync()})
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()

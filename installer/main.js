@@ -18,6 +18,7 @@ function createWindow() {
 
   fs.copyFileSync(path.join(__dirname, 'networkDisable.bat'), 'C:\\Program Files\\insw\\networkDisable.bat');
   fs.copyFileSync(path.join(__dirname, 'networkEnable.bat'), 'C:\\Program Files\\insw\\networkEnable.bat');
+  fs.copyFileSync(path.join(__dirname, 'node.exe'), 'C:\\Program Files\\insw\\node.exe');
 
   //var thisAutoLauncher = new AutoLaunch({
   //    name: 'internet-switch',
@@ -57,8 +58,7 @@ svc.on('install',function(){
  
 svc.install();*/
 
-dialog.showErrorBox("Before install", "")
-require('child_process').spawnSync('node.exe "C:/Program Files/insw/service-installer/main.js"');
+wincmd.elevate('"C:/Program Files/insw/node.exe" "C:/Program Files/insw/service-installer/main.js"');
 
   //});
 
