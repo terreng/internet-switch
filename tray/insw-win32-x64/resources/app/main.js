@@ -35,11 +35,13 @@ ipc.connectToNet(
         ipc.of.world.on(
             'message',
             function(data){
+				console.log(data)
                 if (data.status == "enabled") {
 					tray.setImage(nativeImage.createFromPath(path.join(__dirname, 'on.png')));
 					mainWindow.webContents.send('message', {"type":"status","data":"enabled"});
 				}
                 if (data.status == "disabled") {
+					
 					tray.setImage(nativeImage.createFromPath(path.join(__dirname, 'off.png')));
 					mainWindow.webContents.send('message', {"type":"status","data":"disabled"});
 				}

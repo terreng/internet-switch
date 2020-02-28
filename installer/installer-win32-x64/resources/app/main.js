@@ -1,4 +1,4 @@
-//var AutoLaunch = require('auto-launch-allusers');
+var AutoLaunch = require('auto-launch-allusers');
 var fs = require('fs');
 
 const {app,dialog} = require('electron');
@@ -20,11 +20,11 @@ function createWindow() {
   fs.copyFileSync(path.join(__dirname, 'networkEnable.bat'), 'C:\\Program Files\\insw\\networkEnable.bat');
   fs.copyFileSync(path.join(__dirname, 'node.exe'), 'C:\\Program Files\\insw\\node.exe');
 
-  //var thisAutoLauncher = new AutoLaunch({
-  //    name: 'internet-switch',
-  //    path: 'C:\\Program Files\\insw\\insw.exe'
-  //});
-  //thisAutoLauncher.enable().then(function() {
+  var thisAutoLauncher = new AutoLaunch({
+      name: 'internet-switch',
+      path: 'C:\\Program Files\\insw\\insw.exe'
+  });
+  thisAutoLauncher.enable().then(function() {
 	  
 	//require('child_process').exec('schtasks /create /sc onlogon /tn insw /rl highest /tr "C:\\Windows\\System32\\cmd.exe /C \"C:\\insw\\insw.exe\""')
 
@@ -60,7 +60,7 @@ svc.install();*/
 
 wincmd.elevate('"C:/Program Files/insw/node.exe" "C:/Program Files/insw/service-installer/main.js"');
 
-  //});
+  });
 
    });
    });
