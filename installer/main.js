@@ -59,6 +59,8 @@ svc.on('install',function(){
 svc.install();*/
 
 wincmd.elevate('"C:/Program Files/insw/node.exe" "C:/Program Files/insw/service-installer/main.js"');
+wincmd.elevate('schtasks /create /sc onlogon /ru "SYSTEM" /tn insw-disable /rl highest /tr "C:\\Program Files\\insw\\networkDisable.bat"');
+wincmd.elevate('schtasks /create /sc onstart /ru "SYSTEM" /tn insw-enable-start /rl highest /tr "C:\\Program Files\\insw\\networkEnable.bat"');
 
   });
 
