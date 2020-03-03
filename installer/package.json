@@ -12,8 +12,8 @@
   "dependencies": {
     "auto-launch-allusers": "^5.0.9",
     "electron-tray-window": "^1.2.5",
-    "extract-zip": "^1.6.7",
     "node-windows": "^0.1.14",
+    "unzipper": "^0.10.10",
     "username": "^5.1.0"
   },
   "build": {

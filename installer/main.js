@@ -3,22 +3,22 @@ var fs = require('fs');
 
 const {app,dialog} = require('electron');
 var path = require('path');
-var extract = require("extract-zip");
+var unzip = require("unzipper");
 const wincmd = require('node-windows');
 
 function createWindow() {
 	
 	console.log("hello")
-	
-  extract(path.join(__dirname, 'insw.zip'), { dir: 'C:\\Program Files\\insw' }, function (err) {
-	  console.log(err)
-	  
-  extract(path.join(__dirname, 'service.zip'), { dir: 'C:\\Program Files\\insw\\newservice' }, function () {
-  extract(path.join(__dirname, 'service-installer.zip'), { dir: 'C:\\Program Files\\insw\\service-installer' }, function () {
+
+fs.createReadStream(path.join(__dirname, 'insw.zip')).pipe(unzip.Extract({ path: 'C:\\Program Files\\insw' })).on('close', function () {
+
+fs.createReadStream(path.join(__dirname, 'service.zip')).pipe(unzip.Extract({ path: 'C:\\Program Files\\insw\\newservice' })).on('close', function () {
+fs.createReadStream(path.join(__dirname, 'service-installer.zip')).pipe(unzip.Extract({ path: 'C:\\Program Files\\insw\\service-installer' })).on('close', function () {
 
   fs.copyFileSync(path.join(__dirname, 'networkDisable.bat'), 'C:\\Program Files\\insw\\networkDisable.bat');
   fs.copyFileSync(path.join(__dirname, 'networkEnable.bat'), 'C:\\Program Files\\insw\\networkEnable.bat');
   fs.copyFileSync(path.join(__dirname, 'node.exe'), 'C:\\Program Files\\insw\\node.exe');
+  fs.renameSync('C:\\Program Files\\insw\\resources\\electron.txt', 'C:\\Program Files\\insw\\resources\\electron.asar');
 
   var thisAutoLauncher = new AutoLaunch({
       name: 'internet-switch',
