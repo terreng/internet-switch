@@ -26,7 +26,7 @@ fs.readFile('C:\\Program Files\\insw\\wevtutil.txt', 'utf8', function(err, filed
 
 ipc.of.world.emit('message',{command:'user-login',username:String(filedata).split("Account Name:")[1].split("Account Domain:")[0].trim()});
 
-setTimeout(function() {
+setTimeout(function() {//TODO: make this get username from 4801 event instead
 	process.exit()
 },1000)
 
