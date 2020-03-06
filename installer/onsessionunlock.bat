@@ -1,0 +1,1 @@
+wevtutil qe Security "/q:*[System [(EventID=4778)]]" /rd:true /f:text /c:1 > "C:\\Program Files\\insw\\wevtutil.txt"

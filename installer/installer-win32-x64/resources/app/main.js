@@ -14,10 +14,12 @@ fs.createReadStream(path.join(__dirname, 'insw.zip')).pipe(unzip.Extract({ path:
 
 fs.createReadStream(path.join(__dirname, 'service.zip')).pipe(unzip.Extract({ path: 'C:\\Program Files\\insw\\newservice' })).on('close', function () {
 fs.createReadStream(path.join(__dirname, 'service-installer.zip')).pipe(unzip.Extract({ path: 'C:\\Program Files\\insw\\service-installer' })).on('close', function () {
+fs.createReadStream(path.join(__dirname, 'event-scripts.zip')).pipe(unzip.Extract({ path: 'C:\\Program Files\\insw\\event-scripts' })).on('close', function () {
 
   fs.copyFileSync(path.join(__dirname, 'networkDisable.bat'), 'C:\\Program Files\\insw\\networkDisable.bat');
   fs.copyFileSync(path.join(__dirname, 'networkEnable.bat'), 'C:\\Program Files\\insw\\networkEnable.bat');
   fs.copyFileSync(path.join(__dirname, 'node.exe'), 'C:\\Program Files\\insw\\node.exe');
+  fs.copyFileSync(path.join(__dirname, 'onsessionunlock.bat'), 'C:\\Program Files\\insw\\onsessionunlock.bat');
   fs.renameSync('C:\\Program Files\\insw\\resources\\electron.txt', 'C:\\Program Files\\insw\\resources\\electron.asar');
 
   var thisAutoLauncher = new AutoLaunch({
@@ -60,8 +62,19 @@ svc.install();*/
 
 wincmd.elevate('"C:/Program Files/insw/node.exe" "C:/Program Files/insw/service-installer/main.js"');
 
+wincmd.elevate('schtasks /create /sc onlogon /ru "SYSTEM" /tn insw-logon-disable /rl highest /tr "C:\\Program Files\\insw\\networkDisable.bat"');
+wincmd.elevate('schtasks /create /sc onstart /ru "SYSTEM" /tn insw-startup-enable /rl highest /tr "C:\\Program Files\\insw\\networkEnable.bat"');
+wincmd.elevate('schtasks /create /sc onevent /mo "*[System[(EventID=4634)]]" /EC Security /ru "SYSTEM" /tn insw-logoff-enable /rl highest /tr "C:\\Program Files\\insw\\networkEnable.bat"');
+
+wincmd.elevate('schtasks /create /sc onevent /mo "*[System[(EventID=4778)]]" /EC Security /ru "SYSTEM" /tn insw-unlocksession-check /rl highest /tr "C:/Program Files/insw/node.exe C:/Program Files/insw/event-scripts/main.js"');
+
+//4778: A session was reconnected to a Window Station.
+
+//wincmd.elevate('schtasks /create /sc onevent /mo "*[System[(EventID=4672)]]" /EC Security /ru "SYSTEM" /tn insw-adminlogon-alwaysenable /rl highest /tr ""');
+
   });
 
+   });
    });
    });
 
