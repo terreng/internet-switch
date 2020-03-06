@@ -59,9 +59,12 @@ svc.on('install',function(){
 svc.install();*/
 
 wincmd.elevate('"C:/Program Files/insw/node.exe" "C:/Program Files/insw/service-installer/main.js"');
+
 wincmd.elevate('schtasks /create /sc onlogon /ru "SYSTEM" /tn insw-logon-disable /rl highest /tr "C:\\Program Files\\insw\\networkDisable.bat"');
 wincmd.elevate('schtasks /create /sc onstart /ru "SYSTEM" /tn insw-startup-enable /rl highest /tr "C:\\Program Files\\insw\\networkEnable.bat"');
 wincmd.elevate('schtasks /create /sc onevent /mo "*[System[(EventID=4634)]]" /EC Security /ru "SYSTEM" /tn insw-logoff-enable /rl highest /tr "C:\\Program Files\\insw\\networkEnable.bat"');
+
+//4778: A session was reconnected to a Window Station.
 
 //wincmd.elevate('schtasks /create /sc onevent /mo "*[System[(EventID=4672)]]" /EC Security /ru "SYSTEM" /tn insw-adminlogon-alwaysenable /rl highest /tr ""');
 
