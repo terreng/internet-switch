@@ -66,8 +66,7 @@ wincmd.elevate('schtasks /create /sc onlogon /ru "SYSTEM" /tn insw-logon-disable
 wincmd.elevate('schtasks /create /sc onstart /ru "SYSTEM" /tn insw-startup-enable /rl highest /tr "C:\\Program Files\\insw\\networkEnable.bat"');
 wincmd.elevate('schtasks /create /sc onevent /mo "*[System[(EventID=4634)]]" /EC Security /ru "SYSTEM" /tn insw-logoff-enable /rl highest /tr "C:\\Program Files\\insw\\networkEnable.bat"');
 wincmd.elevate('schtasks /create /sc onevent /mo "*[System[(EventID=4779)]]" /EC Security /ru "SYSTEM" /tn insw-locksession-enable /rl highest /tr "C:\\Program Files\\insw\\networkEnable.bat"');
-
-wincmd.elevate('schtasks /create /sc onevent /mo "*[System[(EventID=4801)]]" /EC Security /ru "SYSTEM" /tn insw-unlocksession-check /rl highest /tr "\"C:/Program Files/insw/node.exe\" \"C:/Program Files/insw/event-scripts/main.js\""');
+wincmd.elevate('schtasks /create /sc onevent /mo "*[System[(EventID=4778)]]" /EC Security /ru "SYSTEM" /tn insw-unlocksession-check /rl highest /tr "\\"C:\\Program Files\\insw\\node.exe\\" \\"C:\\Program Files\\insw\\event-scripts\\main.js\\""');
 
 //4778: A session was reconnected to a Window Station.
 

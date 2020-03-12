@@ -30,11 +30,13 @@ ipc.serveNet(
 				console.log("Did parse")
 				console.log(filedata)
 				if (filedata.indexOf(data.username) > -1) {
+					console.log("Sending enabled for username: "+data.username);
 					wincmd.elevate('netsh interface set interface "Ethernet" admin=enable');
-					ipc.server.emit(socket,'message',{status:"enabled"});
+					ipc.server.broadcast('message',{status:"enabled"});
 				} else {
-					wincmd.elevate('netsh interface set interface "Ethernet" admin=disabled');
-					ipc.server.emit(socket,'message',{status:"disabled"});
+					console.log("Sending disabled for username: "+data.username);
+					wincmd.elevate('netsh interface set interface "Ethernet" admin=disable');
+					ipc.server.broadcast('message',{status:"disabled"});
 				}
 				});
 			}

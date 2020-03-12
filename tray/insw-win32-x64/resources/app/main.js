@@ -30,6 +30,7 @@ ipc.connectToNet(
             'disconnect',
             function(){
 				app.quit();
+				tray.destroy();
             }
         );
         ipc.of.world.on(
@@ -41,7 +42,6 @@ ipc.connectToNet(
 					mainWindow.webContents.send('message', {"type":"status","data":"enabled"});
 				}
                 if (data.status == "disabled") {
-					
 					tray.setImage(nativeImage.createFromPath(path.join(__dirname, 'off.png')));
 					mainWindow.webContents.send('message', {"type":"status","data":"disabled"});
 				}
