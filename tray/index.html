@@ -10,9 +10,12 @@
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 body {
-    background: #a8b5bb;
+    background: rgba(38, 50, 56, 0.95);
 font-family: 'Open Sans', sans-serif;
 user-select: none;
+}
+#disable_now_button {
+background: #ff2e2e;
 }
 </style>
 </head>
@@ -38,16 +41,16 @@ user-select: none;
     text-align: center;
     color: white;
     font-size: 20px;
-    background: #ff2e2e;
+    
     font-weight: 600;
     border-radius: 14px;
     margin-top: 72px;
     cursor: pointer;
-">Disable Now</div>
+" id="disable_now_button">Disable Now</div>
 <div onclick="doAlwaysDisable()" style="
 padding: 11px;
 text-align: center;
-color: #ff0000;
+color: #ff2e2e;
 font-size: 18px;
 /* background: #ff2e2e; */
 font-weight: 600;
@@ -96,7 +99,7 @@ cursor: pointer;
 <div id="enable_password" style="display:none">
 <input placeholder="Password" id="password" type="password" style="
     font-size: 20px;
-    border: 2px solid black;
+    border: 2px solid #a5a5a5;
     border-radius: 8px;
     padding: 7px 8px;
     max-width: 100%;
@@ -116,6 +119,12 @@ ipc.on('message', (event, message) => {
 if (message.type == "status") {
 if (message.data == "enabled") {
     setEnabled()
+	gid("disable_now_button").style.background = "";
+	gid("disable_now_button").style.pointerEvents = "";
+	if (message.always) {//TODO, GET IT TO DISABLE BUTTON WHEN ON WHITELIST
+		gid("disable_now_button").style.background = "gray";
+		gid("disable_now_button").style.pointerEvents = "none";
+	}
 }
 if (message.data == "disabled") {
     setDisabled()
