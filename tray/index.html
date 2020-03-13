@@ -119,11 +119,11 @@ ipc.on('message', (event, message) => {
 if (message.type == "status") {
 if (message.data == "enabled") {
     setEnabled()
-	gid("disable_now_button").style.background = "";
-	gid("disable_now_button").style.pointerEvents = "";
+	document.querySelector("#disable_now_button").style.background = "";
+	document.querySelector("#disable_now_button").style.pointerEvents = "";
 	if (message.always) {//TODO, GET IT TO DISABLE BUTTON WHEN ON WHITELIST
-		gid("disable_now_button").style.background = "gray";
-		gid("disable_now_button").style.pointerEvents = "none";
+		document.querySelector("#disable_now_button").style.background = "gray";
+		document.querySelector("#disable_now_button").style.pointerEvents = "none";
 	}
 }
 if (message.data == "disabled") {

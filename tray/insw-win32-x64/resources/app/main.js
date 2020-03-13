@@ -39,7 +39,7 @@ ipc.connectToNet(
 				console.log(data)
                 if (data.status == "enabled") {
 					tray.setImage(nativeImage.createFromPath(path.join(__dirname, 'on.png')));
-					mainWindow.webContents.send('message', {"type":"status","data":"enabled"});
+					mainWindow.webContents.send('message', {"type":"status","data":"enabled","always":true});
 				}
                 if (data.status == "disabled") {
 					tray.setImage(nativeImage.createFromPath(path.join(__dirname, 'off.png')));
@@ -76,7 +76,7 @@ function createWindow() {
   mainWindow.loadFile('index.html')
   
   tray = new Tray(nativeImage.createFromPath(path.join(__dirname, 'off.png')));
-  trayWindow.setOptions({tray: tray,window: mainWindow});
+  trayWindow.setOptions({tray: tray,window: mainWindow,margin_y:20});
 
   mainWindow.webContents.on('did-finish-load', () => {
     ipc.of.world.emit('message',{command:'user-login',username:username.sync()})
@@ -97,7 +97,7 @@ function createWindow() {
     if (arg == "enable-always") {
       ipc.of.world.emit('message',{command:'enable-always',username:username.sync()})
 	  tray.setImage(nativeImage.createFromPath(path.join(__dirname, 'on.png')));
-	  mainWindow.webContents.send('message', {"type":"status","data":"enabled"});
+	  mainWindow.webContents.send('message', {"type":"status","data":"enabled","always":true});
     }
     if (arg == "disable-always") {
       ipc.of.world.emit('message',{command:'disable-always',username:username.sync()})
