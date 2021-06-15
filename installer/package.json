@@ -6,7 +6,7 @@
     "start": "electron ."
   },
   "devDependencies": {
-    "electron": "^4.2.12",
+    "electron": "^9.4.0",
     "electron-rebuild": "^1.10.0"
   },
   "dependencies": {
@@ -15,7 +15,7 @@
     "node-windows": "^0.1.14",
     "unzipper": "^0.10.10",
     "username": "^5.1.0",
-    "electron": "^4.2.12",
+    "electron": "^9.4.0",
     "electron-rebuild": "^1.10.0"
   },
   "build": {
