@@ -29,15 +29,21 @@ ipc.serveNet(
 				filedata = JSON.parse(filedata || "[]");
 				console.log("Did parse")
 				console.log(filedata)
-				if (filedata.indexOf(data.username) > -1) {
-					console.log("Sending enabled for username: "+data.username);
-					wincmd.elevate('netsh interface set interface "Ethernet" admin=enable');
-					ipc.server.broadcast('message',{status:"enabled"});
-				} else {
-					console.log("Sending disabled for username: "+data.username);
-					wincmd.elevate('netsh interface set interface "Ethernet" admin=disable');
-					ipc.server.broadcast('message',{status:"disabled"});
-				}
+
+        checkIfUserIsAdmin(data.username, function(isadmin) {
+
+          if (filedata.indexOf(data.username) > -1 || isadmin) {
+            console.log("Sending enabled for username: "+data.username);
+            wincmd.elevate('netsh interface set interface "Ethernet" admin=enable');
+            ipc.server.broadcast('message',{status:"enabled"});
+          } else {
+            console.log("Sending disabled for username: "+data.username);
+            wincmd.elevate('netsh interface set interface "Ethernet" admin=disable');
+            ipc.server.broadcast('message',{status:"disabled"});
+          }
+
+        })
+
 				});
 			}
 			if (data.command == "enable") {
@@ -70,6 +76,49 @@ ipc.serveNet(
 );
 
 ipc.server.start();
+
+
+
+
+
+
+function checkIfUserIsAdmin(username, callback) {
+
+var exec = require('child_process').exec;
+
+exec('net user "'+username+'" /DOMAIN', function(error, stdout, stderr){
+
+var groups = stdout.split("Global Group memberships")[1].split("The command completed successfully.")[0].split("*");
+groups.reverse()
+groups.pop()
+groups = groups.map(function(a) {return a.trim()})
+
+console.log(groups)
+
+exec('net localgroup Administrators', function(error, stdout2, stderr){
+
+var administrators = stdout2;
+
+var isadmin = false;
+
+for (var i = 0; i < groups.length; i++) {
+    if (administrators.indexOf(groups[i]) > -1) {
+        isadmin = true;
+    }
+}
+
+callback(isadmin);
+
+});
+
+});
+
+}
+
+
+
+
+
 
 /*
 var fs = require('fs');

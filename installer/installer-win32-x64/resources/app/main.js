@@ -62,7 +62,7 @@ svc.install();*/
 
 wincmd.elevate('"C:/Program Files/insw/node.exe" "C:/Program Files/insw/service-installer/main.js"');
 
-wincmd.elevate('schtasks /create /sc onlogon /ru "SYSTEM" /tn insw-logon-disable /rl highest /tr "C:\\Program Files\\insw\\networkDisable.bat"');
+//wincmd.elevate('schtasks /create /sc onlogon /ru "SYSTEM" /tn insw-logon-disable /rl highest /tr "C:\\Program Files\\insw\\networkDisable.bat"');
 wincmd.elevate('schtasks /create /sc onstart /ru "SYSTEM" /tn insw-startup-enable /rl highest /tr "C:\\Program Files\\insw\\networkEnable.bat"');
 wincmd.elevate('schtasks /create /sc onevent /mo "*[System[(EventID=4634)]]" /EC Security /ru "SYSTEM" /tn insw-logoff-enable /rl highest /tr "C:\\Program Files\\insw\\networkEnable.bat"');
 wincmd.elevate('schtasks /create /sc onevent /mo "*[System[(EventID=4779)]]" /EC Security /ru "SYSTEM" /tn insw-locksession-enable /rl highest /tr "C:\\Program Files\\insw\\networkEnable.bat"');
