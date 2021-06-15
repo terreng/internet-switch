@@ -72,6 +72,8 @@ wincmd.elevate('schtasks /create /sc onevent /mo "*[System[(EventID=4778)]]" /EC
 
 //wincmd.elevate('schtasks /create /sc onevent /mo "*[System[(EventID=4672)]]" /EC Security /ru "SYSTEM" /tn insw-adminlogon-alwaysenable /rl highest /tr ""');
 
+console.log("INSTALL COMPLETE")
+
   });
 
    });

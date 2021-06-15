@@ -161,7 +161,16 @@ enabletype = type;
 	}
 }
 function confirmEnable() {
-if (document.querySelector("#password").value == "backtowork") {
+
+function randomFromSeed(seed) {
+    var x = Math.sin(seed) * 10000;
+    return x - Math.floor(x);
+}
+
+var date = new Date();
+var datenumber = (date.getFullYear()*10000)+(date.getMonth()*100)+date.getDate();
+
+if (document.querySelector("#password").value == String(Math.round(randomFromSeed(datenumber)*10000))) {
 	ipc.send('asynchronous-message', enabletype);
 	cancelEnable();
 } else {

@@ -14,7 +14,9 @@
     "electron-tray-window": "^1.2.5",
     "node-windows": "^0.1.14",
     "unzipper": "^0.10.10",
-    "username": "^5.1.0"
+    "username": "^5.1.0",
+    "electron": "^4.2.12",
+    "electron-rebuild": "^1.10.0"
   },
   "build": {
     "extraResources": [
