@@ -1,0 +1,43 @@
+
+<html>
+<head>
+<meta content='width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover' name='viewport' />
+<title>Internet Switch Codes</title>
+</head>
+<body style="font-size: 25px;padding:10px;font-family:Arial, Helvetica, sans-serif;">
+
+<h4>Today's code:</h4>
+<h2 id="todays_code"></h2>
+
+<script>
+
+var lastdatenumber = 0;
+
+function generateCode() {
+
+function randomFromSeed(seed) {
+    var x = Math.sin(seed) * 10000;
+    return x - Math.floor(x);
+}
+
+var date = new Date();
+var datenumber = (date.getFullYear()*10000)+(date.getMonth()*100)+date.getDate();
+
+if (datenumber !== lastdatenumber) {
+
+document.querySelector("#todays_code").innerHTML = String(Math.round(randomFromSeed(datenumber)*10000));
+lastdatenumber = datenumber;
+
+}
+}
+
+setInterval(function() {
+    generateCode()   
+},1000)
+
+generateCode() 
+
+</script>
+
+</body>
+</html>
