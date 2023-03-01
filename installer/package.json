@@ -12,7 +12,7 @@
   "dependencies": {
     "auto-launch-allusers": "^5.0.9",
     "electron-tray-window": "^1.2.5",
-    "node-windows": "^0.1.14",
+    "node-windows": "^1.0.0-beta.8",
     "unzipper": "^0.10.10",
     "username": "^5.1.0",
     "electron": "^4.2.12",
